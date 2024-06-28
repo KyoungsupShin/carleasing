@@ -3,7 +3,7 @@ import xlwings as xw
 
 class se_calculator():
     def __init__(self):
-        self.xlsx_name = '..\data\se_new.xlsx'
+        self.xlsx_name = '..\data\se.xlsx'
         # app = xw.App(visible=False)
         self.read_excel_file()
         self.fetch_master_data()
@@ -66,7 +66,8 @@ class se_calculator():
             "취득원가" : self.sheet.range('T18').value,
             "리스기간" : self.leasing[int(self.sheet.range('AD18').value)-1],
             "최대잔가" : round(self.sheet.range('AD21').value*100,2),
-            "기준금리" : round(self.sheet.range("AD28").value*100,2)
+            "기준금리" : round(self.sheet.range("AD28").value*100,2),
+            "고잔가" : False
         }
         return report
 
@@ -100,7 +101,8 @@ class se_calculator():
                 "취득원가" : self.sheet.range('T18').value,
                 "리스기간" : self.leasing[int(self.sheet.range('AD18').value)-1],
                 "최대잔가" : round(self.sheet.range('AD21').value*100,2),
-                "기준금리" : round(self.sheet.range("AD28").value*100,2)
+                "기준금리" : round(self.sheet.range("AD28").value*100,2),
+                "고잔가" : False
             }
             reports.append(report)
         return reports
