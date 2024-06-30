@@ -8,8 +8,14 @@ class se_calculator():
         self.read_excel_file()
         self.fetch_master_data()
 
-    def read_excel_file(self):        
-        self.wb = xw.Book(self.xlsx_name)  # 파일 경로와 이름을 적절히 수정하세요
+    def read_excel_file(self):   
+        self.app = xw.App(visible=False)        
+        self.wb = self.app.books.open(self.xlsx_name)
+        self.app.calculation = 'manual'
+        self.app.enable_events = False        
+
+        # self.wb = app.Book(self.xlsx_name)  # 파일 경로와 이름을 적절히 수정하세요
+        # self.wb.app.calculation = 'manual'  # 계산 모드를 수동으로 설정
         self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
   
     def fetch_master_data(self):
@@ -26,9 +32,11 @@ class se_calculator():
         self.sheet.range('AE15').value = input_data['param4'] #탁송료
         self.sheet.range('AD17').value = 2 #취득원가 선택 (고정값)
         self.sheet.range('AD18').value = int(input_data['param5']) #리스기간 (반복 실행)
-        self.sheet.range('AD19').value = int(input_data['param6']) #운행거리 (반복 실행)
+        # self.sheet.range('AD19').value = int(input_data['param6']) #운행거리 (반복 실행)
+        self.sheet.range('AD19').value = 2 #운행거리 (반복 실행)
         self.sheet.range('AD20').value = float(input_data['param7']) #보증금 (세부 선택값)
-        self.sheet.range('AD21').value = float(input_data['param8'])#잔가 (세부 선택값)
+        # self.sheet.range('AD21').value = float(input_data['param8'])#잔가 (세부 선택값)
+        self.sheet.range('AD21').value = 0 #잔가 (세부 선택값)
         self.sheet.range('AD22').value = float(input_data['param9']) #선수금 (세부 선택값)
         self.sheet.range('AD25').value = 0 #Total inc (고정값)
         self.sheet.range('AD26').value = float(input_data['param10']) #CM 인센티브 (초기값)
@@ -40,7 +48,13 @@ class se_calculator():
         self.sheet.range('AD34').value = 2 #인지대 수납 1.차감지급 2.리스료 포함 3.수납완료 
         self.sheet.range('AG10').value = input_data['param15'] #하이브리드 세제혜택 여부
         self.sheet.range('AG11').value = input_data['param16'] #친환경 자동차 보조금 
-        
+        self.sheet.range('AD13').value = input_data['param17'] #옵션 가격
+        self.sheet.range('AD14').value = input_data['param18'] #할인 가격
+        self.sheet.range('AI11').value = input_data['param19'] #할인 가격
+        self.app.calculation = 'automatic'
+        self.app.enable_events = True
+
+        # self.wb.app.calculate()
 
     def create_single_report(self):
         # self.sheet.range('AD18').value = i+1 #리스기간
@@ -118,9 +132,9 @@ class se_calculator():
         reports = self.create_single_report()
         return reports
 
-
-    # def __del__(self):
-    #     self.wb.close()
+    def __del__(self):
+        self.wb.close()
+        self.app.kill()
 
 if __name__ == '__main__':
     se = se_calculator()

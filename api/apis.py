@@ -4,16 +4,18 @@ from se import *
 from nh import *
 from sh import * 
 from dgb import * 
+from mz import *
+from bnk import * 
 from flask import Flask, jsonify, request
 import argparse 
 app = Flask(__name__)    
 
-@app.route('/api/get_se_report', methods=['GET'])
-def get_se_report():
-    se = se_calculator()
-    report = se.main()
-    del se 
-    return jsonify(report)
+# @app.route('/api/get_se_report', methods=['GET'])
+# def get_se_report():
+#     se = se_calculator()
+#     report = se.main()
+#     del se 
+#     return jsonify(report)
 
 @app.route('/api/get_se_report_post', methods=['POST'])
 def get_se_report_post():
@@ -21,7 +23,7 @@ def get_se_report_post():
     print(input_data)
     se = se_calculator()
     report = se.main(input_data)
-    print(report)
+    # print(report)
     del se 
     return jsonify(report)
 
@@ -63,8 +65,29 @@ def get_dgb_report_post():
     dgb = dgb_calculator()
     report = dgb.main(input_data)
     print(report)
-    del dgb
+    # del dgb
     return jsonify(report)
+
+@app.route('/api/get_mz_report_post', methods=['POST'])
+def get_mz_report_post():
+    input_data = request.get_json() 
+    print(input_data)
+    mz = mz_calculator()
+    report = mz.main(input_data)
+    print(report)
+    # del mz
+    return jsonify(report)
+
+@app.route('/api/get_bnk_report_post', methods=['POST'])
+def get_bnk_report_post():
+    input_data = request.get_json() 
+    print(input_data)
+    bnk = bnk_calculator()
+    report = bnk.main(input_data)
+    print(report)
+    # del mz
+    return jsonify(report)
+
 
 
 # if __name__ == '__main__':

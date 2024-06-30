@@ -4,11 +4,15 @@ import xlwings as xw
 class dgb_calculator():
     def __init__(self):
         self.xlsx_name = '../data/dgb.xlsm'
-        # app = xw.App(visible=False)
         self.read_excel_file()
     
     def read_excel_file(self):        
-        self.wb = xw.Book(self.xlsx_name)  # 파일 경로와 이름을 적절히 수정하세요
+        self.app = xw.App(visible=False)        
+        self.wb = self.app.books.open(self.xlsx_name)
+        self.app.calculation = 'manual'
+        self.app.enable_events = False        
+
+        # self.wb = xw.Book(self.xlsx_name)  # 파일 경로와 이름을 적절히 수정하세요
         self.sheet = self.wb.sheets['운용리스_단일']  # 시트 이름을 적절히 수정하세요
         self.sheet1 = self.wb.sheets['AG 입력시트']
         self.sheet2 = self.wb.sheets['계산_운용리스_단일']
@@ -23,9 +27,11 @@ class dgb_calculator():
         self.sheet.range('AS29').value = '차량가기준' #취득원가 선택 (고정값)
         self.sheet.range('AS28').value = input_data['param5'] #리스기간 (반복 실행)
         self.sheet.range('BR22').value = False # 자동차세 포함 여부
-        self.sheet.range('AN40').value = input_data['param6'] #운행거리 (반복 실행)
+        self.sheet.range('AN40').value = 20000 #운행거리 (반복 실행)
+        # self.sheet.range('AN40').value = input_data['param6'] #운행거리 (반복 실행)
         self.sheet.range('AS30').value = input_data['param7'] #보증금 (세부 선택값)
-        self.sheet.range('AS36').value = input_data['param8'] #잔가 (세부 선택값)
+        # self.sheet.range('AS36').value = input_data['param8'] #잔가 (세부 선택값)
+        self.sheet.range('AS36').value = 0 #잔가 (세부 선택값)
         self.sheet.range('AS33').value = input_data['param9'] #선수금 (세부 선택값)
         self.sheet.range('AS43').value = input_data['param10'] #CM 인센티브 (초기값)
         self.sheet.range('AS19').value = '대구광역시' #공채 지역 (고정값)
@@ -38,7 +44,11 @@ class dgb_calculator():
         self.sheet.range('AV20').value = input_data['param15'] #친환경 자동차 보조금 
         self.sheet.range('AS11').value = input_data['param16'] #상세모델 
         self.sheet.range('BD18').value = input_data['param17']
-        
+        self.sheet.range('BF12').value = input_data['param18'] #옵션가격
+        self.sheet.range('BF13').value = input_data['param19'] #할인가격
+        self.app.calculation = 'automatic'
+        self.app.enable_events = True
+
     def create_single_report(self):
         report = {
                     "_id": "5",
@@ -107,6 +117,9 @@ class dgb_calculator():
         self.fetch_calculator_parameters(input_data)
         reports = self.create_single_report()
         return reports
+    def __del__(self):
+        self.wb.close()
+        self.app.kill()
 
 if __name__ == '__main__':
     dgb = dgb_calculator()
