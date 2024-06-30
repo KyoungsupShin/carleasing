@@ -52,11 +52,11 @@ class bnk_calculator():
         self.sheet1.range('B39').value = input_data['param6'] #리스기간 (반복 실행)
         # self.sheet1.range('B41').value = input_data['param7'] #운행거리 (반복 실행)
         self.sheet1.range('B41').value = 1 #운행거리 (반복 실행)
-        self.sheet.range('N36').value = input_data['param8'] #보증금 (세부 선택값)
+        # self.sheet.range('N36').value = input_data['param8'] #보증금 (세부 선택값)
         self.sheet1.range('B45').value = 1 #잔가 (세부 선택값)
         # self.sheet1.range('B45').value = (58 - int(input_data['param9'] * 100)) / 100 #잔가 (세부 선택값)
-        self.sheet.range('N36').value = input_data['param10'] #선수금 (세부 선택값)
-        self.sheet.range('N42').value = input_data['param11'] #CM 인센티브 (초기값)
+        # self.sheet.range('N36').value = input_data['param10'] #선수금 (세부 선택값)
+        # self.sheet.range('N42').value = input_data['param11'] #CM 인센티브 (초기값)
         self.sheet1.range('B191').value = input_data['param12'] #공채 포함 여부  1.포함 2.별도 
         self.sheet.range('N23').value = input_data['param13'] #공채할인율  
         # self.sheet1.range('B98').value = input_data['param14'] #취득세 수기 작성 여부 (고정값)
