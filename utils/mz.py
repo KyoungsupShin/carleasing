@@ -26,11 +26,11 @@ class mz_calculator():
         self.sheet.range('AG25').value = input_data['param6']  #리스기간 (반복 실행)
         # self.sheet.range('AG26').value = input_data['param7']  #운행거리 (반복 실행)
         self.sheet.range('AG26').value = 20000  #운행거리 (반복 실행)
-        # self.sheet.range('AG27').value = input_data['param8']  #보증금 (세부 선택값)
+        self.sheet.range('AG27').value = input_data['param8']  #보증금 (세부 선택값)
         # self.sheet.range('AG29').value = input_data['param9']  #잔가 (세부 선택값)
         self.sheet.range('AG29').value = 0  #잔가 (세부 선택값)
-        # self.sheet.range('AG28').value = input_data['param10']  #선수금 (세부 선택값)
-        # self.sheet.range('AG37').value = input_data['param11']  #CM 인센티브 (초기값)
+        self.sheet.range('AG28').value = input_data['param10']  #선수금 (세부 선택값)
+        self.sheet.range('AG37').value = input_data['param11']  #CM 인센티브 (초기값)
         self.sheet.range('AF19').value = input_data['param12']  #공채선택 
         self.sheet.range('AH20').value = input_data['param13']  #공채할인율
         # self.sheet.range('AF18').value = input_data['param14']  #취득세 수기 작성 여부 

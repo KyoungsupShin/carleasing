@@ -29,11 +29,11 @@ class dgb_calculator():
         self.sheet.range('BR22').value = False # 자동차세 포함 여부
         self.sheet.range('AN40').value = 20000 #운행거리 (반복 실행)
         # self.sheet.range('AN40').value = input_data['param6'] #운행거리 (반복 실행)
-        self.sheet.range('AS30').value = input_data['param7'] #보증금 (세부 선택값)
+        # self.sheet.range('AS30').value = input_data['param7'] #보증금 (세부 선택값)
         # self.sheet.range('AS36').value = input_data['param8'] #잔가 (세부 선택값)
         self.sheet.range('AS36').value = 0 #잔가 (세부 선택값)
-        self.sheet.range('AS33').value = input_data['param9'] #선수금 (세부 선택값)
-        self.sheet.range('AS43').value = input_data['param10'] #CM 인센티브 (초기값)
+        # self.sheet.range('AS33').value = input_data['param9'] #선수금 (세부 선택값)
+        # self.sheet.range('AS43').value = input_data['param10'] #CM 인센티브 (초기값)
         self.sheet.range('AS19').value = '대구광역시' #공채 지역 (고정값)
         self.sheet.range('BR19').value = input_data['param11'] #공채선택 
         self.sheet.range('BD21').value = input_data['param12'] #공채할인율
