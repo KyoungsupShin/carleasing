@@ -2,9 +2,11 @@ import glob
 import xlwings as xw
 
 class nh_calculator():
-    def __init__(self):
+    def __init__(self, xl_app, wb):
         self.xlsx_name = '../data/nh.xlsx'
-        # app = xw.App(visible=False)
+        self.app = xl_app
+        self.wb = wb
+
         self.read_excel_file()
         self.fetch_master_data()
         
@@ -37,71 +39,52 @@ class nh_calculator():
         return idx+1
         
     def read_excel_file(self):     
-        self.app = xw.App(visible=False)        
-        self.wb = self.app.books.open(self.xlsx_name)
+        # self.app = xw.App(visible=False)        
+        # self.wb = self.app.books.open(self.xlsx_name)
+        self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
         self.app.calculation = 'manual'
         self.app.enable_events = False        
-        # self.wb = xw.Book(self.xlsx_name)  # 파일 경로와 이름을 적절히 수정하세요
-        self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
   
     def fetch_master_data(self):
         self.brands = self.wb.sheets['1'].range('H43', 'I78').value
         self.capital_names = self.sheet.range('BN27', 'BP38').value
         self.options = self.sheet.range('CL3', 'CM15').value         
-
-    def fetch_calculator_parameters(self, input_data):
-        self.sheet.range('BK10').value = input_data['param4'] #탁송료 부담 여부 1.포함 2.별도 
-        self.sheet.range('BA17').value = input_data['param5'] #탁송료
-        self.sheet.range('BM10').value = 1 #취득원가 선택 (고정값)
-        # self.sheet.range('BG27').value = input_data['param6'] #리스기간 (반복 실행)
-        self.sheet.range('BG27').value = 1  #리스기간 (반복 실행)
-        # self.sheet.range('BO11').value = input_data['param7'] #운행거리 (반복 실행)
-        self.sheet.range('BO11').value = 2 #운행거리 (반복 실행)
-        # self.sheet.range('AY26').value = input_data['param8'] #보증금 (세부 선택값)
-        # self.sheet.range('AY28').value = input_data['param9'] #잔가 (세부 선택값)
-        self.sheet.range('AY28').value = 0 #잔가 (세부 선택값)
-        # self.sheet.range('AY24').value = input_data['param10'] #선수금 (세부 선택값)
-        # sheet.range('AD25').value = 0 #Total inc (고정값)
-        # self.sheet.range('AY32').value = input_data['param11'] #CM 인센티브 (초기값)
-        self.sheet.range('BJ10').value = input_data['param12'] #공채선택 1.포함 2.미포함
-        self.sheet.range('BB15').value = input_data['param13'] #공채할인율
-        self.sheet.range('BN10').value = 2 #자동차세 포함 여부 1.포함 2. 미포함
-        self.sheet.range('AY9').value = input_data['param14'] #차량가격
-        self.sheet.range('AY10').value = input_data['param15'] #옵션 가격
-        self.sheet.range('AY12').value = input_data['param16'] #옵션 가격
+        self.sheet.range('BM10').value = 1 # 취득원가 선택 (고정값)
+        self.sheet.range('BG27').value = 1 # 리스기간 (반복 실행)
+        self.sheet.range('BO11').value = 2 # 운행거리 (반복 실행)
+        self.sheet.range('AY28').value = 0 # 잔가 (세부 선택값)
+        self.sheet.range('BN10').value = 2 # 자동차세 포함 여부 1.포함 2. 미포함
         self.sheet.range('BH25').value = 1 # 공채 지역(인천)
-        # sheet.range('AD33').value = int(input_data['param13']) #기타비용 포함 여부 1.별도 2.포함
-        # self.sheet.range('AE33').value = int(input_data['param14']) #기타비용 
-        # sheet.range('AD34').value = 2 #인지대 수납 1.차감지급 2.리스료 포함 3.수납완료 
-        # self.sheet.range('AG10').value = input_data['param15'] #하이브리드 세제혜택 여부
-        # self.sheet.range('AG11').value = input_data['param16'] #친환경 자동차 보조금 
+
+    def fetch_calculator_parameters(self, input_data, single=False):
+        self.sheet.range('BK10').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도 
+        self.sheet.range('BA17').value = input_data['delivery_price'] #탁송료
+        self.sheet.range('BJ10').value = input_data['bond_yn'] #공채선택 1.포함 2.미포함
+        self.sheet.range('BB15').value = input_data['bond_rate'] #공채할인율
+        self.sheet.range('AY9').value = input_data['car_price'] #차량가격
+        self.sheet.range('AY10').value = input_data['option_price'] #옵션 가격
+        self.sheet.range('AY12').value = input_data['discount_price'] #할인 가격
+
+        if single == True:
+            self.sheet.range('BG27').value = input_data['lease_month'] #리스기간 (반복 실행)
+            self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
+            self.sheet.range('BO11').value = input_data['distance'] #운행거리 (반복 실행)
+            self.sheet.range('AY24').value = input_data['prepayment_rate'] # 선수금 비율
+            self.sheet.range('AY26').value = input_data['deposit_rate'] # 보증금 비율
+            self.sheet.range('AY32').value = input_data['sales_rate'] # CM인센티브 비율
+
         self.app.calculation = 'automatic'
         self.app.enable_events = True
-        self.sheet.range('BT3').value =  self.brand_idx(input_data['param1']) #브랜드명
-        self.sheet.range('BT9').value = self.car_idx(input_data['param2']) #차종
-        self.sheet.range('BT11').value = self.model_idx(input_data['param3']) #상세모델 
-        self.sheet.range('BO25').value = self.capital_idx(input_data['param0']) #제휴사
+        self.sheet.range('BT3').value =  self.brand_idx(input_data['brand_name']) #브랜드명
+        self.sheet.range('BT9').value = self.car_idx(input_data['car_name']) #차종
+        self.sheet.range('BT11').value = self.model_idx(input_data['trim_name']) #상세모델 
+        self.sheet.range('BO25').value = self.capital_idx(input_data['affiliates_name']) #제휴사
 
     def create_single_report(self):
         report = {
                     "_id": "2",
                     "금융사" : "NH농협캐피탈" ,
-                    "차량가격" : self.sheet.range('H7').value ,
-                    "할인가격" : self.sheet.range('AP7').value , 
-                    "실판매가격" : self.sheet.range('K10').value ,
-                    "보증금" : self.sheet.range('AK17').value , 
-                    "잔존가치" : round(self.sheet.range('AG18').value,2) ,
-                    "선수금" : self.sheet.range('AK16').value ,
-                    "월자동차세" : self.sheet.range('AK20').value ,
-                    "연간운행거리" : self.sheet.range('AG13').value ,
                     "월리스료" : self.sheet.range('AG22').value ,
-                    "등록세" : 0 ,
-                    "취득세" : self.sheet.range('N11').value ,
-                    "공채" : self.sheet.range('N12').value ,
-                    "탁송료" : self.sheet.range('N13').value ,
-                    "기타비용" : self.sheet.range('N15').value ,
-                    "취득원가" : self.sheet.range('N16').value,
-                    "리스기간" : self.sheet.range('AG11').value, 
                     "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                     "기준금리" : round(self.sheet.range("AY38").value*100,2),
                     "고잔가" : False
@@ -109,7 +92,7 @@ class nh_calculator():
         return report
 
     def create_iter_report(self):
-        leasing_iter = [1, 2,3] #36, 48, 60
+        leasing_iter = [1, 2, 3] #36, 48, 60
         reports = []
         for i in leasing_iter:
             self.sheet.range('BG27').value = i+1 #리스기간
@@ -117,22 +100,7 @@ class nh_calculator():
             report = {
                         "_id": "2",
                         "금융사" : "NH농협캐피탈" ,
-                        "차량가격" : self.sheet.range('H7').value ,
-                        "할인가격" : self.sheet.range('AP7').value , 
-                        "실판매가격" : self.sheet.range('K10').value ,
-                        "보증금" : self.sheet.range('AK17').value , 
-                        "잔존가치" : round(self.sheet.range('AG18').value,2) ,
-                        "선수금" : self.sheet.range('AK16').value ,
-                        "월자동차세" : self.sheet.range('AK20').value ,
-                        "연간운행거리" : self.sheet.range('AG13').value ,
                         "월리스료" : self.sheet.range('AG22').value ,
-                        "등록세" : 0 ,
-                        "취득세" : self.sheet.range('N11').value ,
-                        "공채" : self.sheet.range('N12').value ,
-                        "탁송료" : self.sheet.range('N13').value ,
-                        "기타비용" : self.sheet.range('N15').value ,
-                        "취득원가" : self.sheet.range('N16').value,
-                        "리스기간" : self.sheet.range('AG11').value, 
                         "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                         "기준금리" : round(self.sheet.range("AY38").value*100,2),
                         "고잔가" : False
@@ -147,13 +115,13 @@ class nh_calculator():
         return reports
 
     def main_single(self, input_data):
-        self.fetch_calculator_parameters(input_data)
+        self.fetch_calculator_parameters(input_data, True)
         reports = self.create_single_report()
         return reports
 
-    def __del__(self):
-        self.wb.close()
-        self.app.kill()
+    # def __del__(self):
+    #     self.wb.close()
+    #     self.app.kill()
         
 if __name__ == '__main__':
     nh = nh_calculator()
