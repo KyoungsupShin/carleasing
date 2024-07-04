@@ -325,7 +325,7 @@ def get_bnk_single_report_post():
         try:
             if wb is None:
                 return jsonify({'error': 'Failed to open workbook'}), 500
-    
+
             print('\n [Requested time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             bnk = bnk_calculator(xl_app, wb)
             report = bnk.main_single(input_data)
@@ -335,6 +335,7 @@ def get_bnk_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            bnk.wb.save('../log/bnk.xlsm')
             return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

@@ -72,6 +72,10 @@ class nh_calculator():
             self.sheet.range('AY24').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('AY26').value = input_data['deposit_rate'] # 보증금 비율
             self.sheet.range('AY32').value = input_data['sales_rate'] # CM인센티브 비율
+            if input_data['max_res_yn'] == True:
+                self.sheet.range('AY28').value = self.sheet.range('AZ30').value #최대 잔가로 재 설정
+            else:
+                self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
         self.app.calculation = 'automatic'
         self.app.enable_events = True
