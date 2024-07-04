@@ -59,7 +59,10 @@ class dgb_calculator():
             if input_data['max_res_yn'] == True:
                 self.sheet.range('AS36').value = self.sheet.range('AS38').value
             else:
-                self.sheet.range('BR22').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                if input_data['residual_rate'] < 0.3:
+                    self.sheet.range('BR22').value = 0.3
+                else:
+                    self.sheet.range('BR22').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
     def create_single_report(self):
         report = {
