@@ -84,7 +84,10 @@ class nh_calculator():
             if input_data['max_res_yn'] == True:
                 self.sheet.range('AY28').value = self.sheet.range('AZ30').value #최대 잔가로 재 설정
             else:
-                self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                if self.sheet.range('BB30').value = input_data['residual_rate']:
+                    self.sheet.range('AY28').value = self.sheet.range('BB30').value
+                else: 
+                    self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
     def create_single_report(self):
         report = {
