@@ -52,7 +52,10 @@ class mz_calculator():
             if input_data['max_res_yn'] == True:
                 self.sheet.range('AG29').value = self.sheet.range('AG30').value
             else:
-                self.sheet.range('AG29').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                if self.sheet.range('AG31').value > input_data['residual_rate']:
+                    self.sheet.range('AG29').value = self.sheet.range('AG31').value 
+                else:
+                    self.sheet.range('AG29').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
     def create_single_report(self):
         report = {
