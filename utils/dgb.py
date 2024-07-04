@@ -47,11 +47,14 @@ class dgb_calculator():
 
         if single == True:
             self.sheet.range('AS28').value = input_data['lease_month'] #리스기간 (반복 실행)
-            self.sheet.range('BR22').value = input_data['residual_rate'] #잔가 (세부 선택값)
             self.sheet.range('AN40').value = input_data['distance'] #운행거리 (반복 실행)
             self.sheet.range('AS33').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('AS30').value = input_data['deposit_rate'] # 보증금 비율
             self.sheet.range('AS43').value = input_data['sales_rate'] # CM인센티브 비율
+            if input_data['max_res_yn'] == True:
+                self.sheet.range('AS36').value = self.sheet.range('AS38').value
+            else:
+                self.sheet.range('BR22').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
         self.app.calculation = 'automatic'
         self.app.enable_events = True

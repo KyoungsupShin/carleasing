@@ -49,18 +49,22 @@ class se_calculator():
         self.sheet.range('AD13').value = input_data['option_price'] #옵션 가격
         self.sheet.range('AD14').value = input_data['discount_price'] #할인 가격
         self.sheet.range('AI11').value = input_data['electric_subsidary'] #친환경 자동차 보조금 
-
         if single == True:
             self.sheet.range('AD18').value = input_data['lease_month'] #리스기간 (반복 실행)
-            self.sheet.range('AD21').value = input_data['residual_rate'] #잔가 (세부 선택값)
             self.sheet.range('AD19').value = input_data['distance'] #운행거리 (반복 실행)
             self.sheet.range('AD22').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('AD20').value = input_data['deposit_rate'] # 보증금 비율
             self.sheet.range('AD26').value = input_data['sales_rate'] # CM인센티브 비율
-
         self.app.calculation = 'automatic'
         self.app.enable_events = True
 
+        if single == True:
+            if input_data['max_res_yn'] == True:
+                self.sheet.range('AD21').value = self.sheet.range('AH24').value #잔가 #최대 잔가로 재 설정
+            else:
+                self.sheet.range('AD21').value = input_data['residual_rate'] #잔가 (세부 선택값)
+
+        self.wb.save('../log/se.xlsx')
     def create_single_report(self):
         report = {
             "_id": "1",
@@ -80,8 +84,7 @@ class se_calculator():
 
         for i in leasing_iter:
             self.sheet.range('AD18').value = i+1 #리스기간
-            max_res = self.sheet.range('AH24').value
-            self.sheet.range('AD21').value = max_res #잔가
+            self.sheet.range('AD21').value = self.sheet.range('AH24').value #잔가
             report = {
                 "_id": "1",
                 "금융사" : "KDB캐피탈" ,

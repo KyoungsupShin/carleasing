@@ -55,6 +55,7 @@ class bnk_calculator():
         return idx+1
     
     def fetch_calculator_parameters(self, input_data, single = False):
+        print("input data: ", input_data)
         self.sheet1.range('B31').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('N16').value = input_data['delivery_price'] #탁송료-
         self.sheet1.range('B191').value = input_data['bond_yn'] #공채 포함 여부  1.포함 2.별도 
@@ -67,17 +68,22 @@ class bnk_calculator():
         self.sheet.range('N15').value = input_data['discount_price'] #할인가격
         if single == True:
             self.sheet1.range('B39').value = input_data['lease_month'] #리스기간 (반복 실행)
-            self.sheet1.range('B56').value = input_data['residual_rate'] #잔가 (세부 선택값)
             self.sheet1.range('B41').value = input_data['distance'] #운행거리 (반복 실행)
             self.sheet.range('N38').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('N36').value = input_data['deposit_rate'] # 보증금 비율
             self.sheet.range('N42').value = input_data['sales_rate'] # CM인센티브 비율
+            if input_data['max_res_yn'] == True:
+                self.sheet1.range('B56').value = self.sheet1.range('G120').value #최대 잔가로 재 설정
+            else:
+                self.sheet1.range('B56').value = input_data['residual_rate'] #잔가 (세부 선택값)
+
         self.app.calculation = 'automatic'
         self.app.enable_events = True
         self.sheet1.range('B9').value = self.brand_idx(input_data['brand_name']) #브랜드명
         self.sheet1.range('B13').value = self.car_idx(input_data['car_name']) #차종
         self.sheet1.range('B15').value =  self.model_idx(input_data['trim_name']) #상세모델 
         self.sheet1.range('B154').value = self.capital_idx(input_data['affiliates_name']) #제휴사
+
 
     def create_single_report(self):
         report = {
@@ -95,7 +101,7 @@ class bnk_calculator():
         reports = []
         for i in leasing_iter:
             self.sheet1.range('B39').value = i #리스기간
-            self.sheet1.range('B45').value = int(self.sheet1.range('G120').value)
+            self.sheet1.range('B56').value = self.sheet1.range('G120').value
             report = {
                         "_id": "7",
                         "금융사" : "BNK캐피탈" ,
