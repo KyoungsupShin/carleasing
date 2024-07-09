@@ -6,7 +6,8 @@ from nh import *
 from sh import * 
 from dgb import * 
 from mz import *
-from bnk import * 
+from bnk import *
+from pdfgenerator import *  
 from flask import Flask, jsonify, request, g
 import argparse 
 import xlwings as xw
@@ -309,6 +310,7 @@ def get_bnk_report_post():
 
         except Exception as e:
             print(f"Error during Excel processing: {e}")
+            wb.save('../log/bnk.xlsm')
             xl_app = None
             return jsonify({'error': str(e)}), 500
 
@@ -335,7 +337,6 @@ def get_bnk_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
-            bnk.wb.save('../log/bnk.xlsm')
             return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

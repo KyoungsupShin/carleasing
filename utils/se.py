@@ -64,7 +64,6 @@ class se_calculator():
             else:
                 self.sheet.range('AD21').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
-        self.wb.save('../log/se.xlsx')
     def create_single_report(self):
         report = {
             "_id": "1",
