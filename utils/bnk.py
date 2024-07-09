@@ -118,14 +118,24 @@ class bnk_calculator():
         return reports
 
     def main(self, input_data):
-        self.fetch_calculator_parameters(input_data)
-        reports = self.create_iter_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data)
+            reports = self.create_iter_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     def main_single(self, input_data):
-        self.fetch_calculator_parameters(input_data, True)
-        reports = self.create_single_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data, True)
+            reports = self.create_single_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     # def __del__(self):
     #     self.wb.close()

@@ -3,7 +3,7 @@ import xlwings as xw
 
 class nh_calculator():
     def __init__(self, xl_app, wb):
-        self.xlsx_name = '../data/nh.xlsx'
+        # self.xlsx_name = '../data/nh.xlsx'
         self.app = xl_app
         self.wb = wb
 
@@ -84,7 +84,10 @@ class nh_calculator():
             if input_data['max_res_yn'] == True:
                 self.sheet.range('AY28').value = self.sheet.range('AZ30').value #최대 잔가로 재 설정
             else:
-                self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                if self.sheet.range('BB30').value == input_data['residual_rate']:
+                    self.sheet.range('AY28').value = self.sheet.range('BB30').value
+                else: 
+                    self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
 
     def create_single_report(self):
         report = {
@@ -116,14 +119,24 @@ class nh_calculator():
     
     
     def main(self, input_data):
-        self.fetch_calculator_parameters(input_data)
-        reports = self.create_iter_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data)
+            reports = self.create_iter_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     def main_single(self, input_data):
-        self.fetch_calculator_parameters(input_data, True)
-        reports = self.create_single_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data, True)
+            reports = self.create_single_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     # def __del__(self):
     #     self.wb.close()
