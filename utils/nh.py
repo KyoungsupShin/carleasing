@@ -55,6 +55,7 @@ class nh_calculator():
         self.sheet.range('AY28').value = 0 # 잔가 (세부 선택값)
         self.sheet.range('BN10').value = 2 # 자동차세 포함 여부 1.포함 2. 미포함
         self.sheet.range('BH25').value = 1 # 공채 지역(인천)
+        self.sheet.range('AY26').value = 0.3 # 보증금 비율
 
     def fetch_calculator_parameters(self, input_data, single=False):
         self.sheet.range('BK10').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도 
@@ -96,7 +97,7 @@ class nh_calculator():
                     "월리스료" : self.sheet.range('AG22').value ,
                     "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                     "기준금리" : round(self.sheet.range("AY38").value*100,2),
-                    "고잔가" : False
+                    # "고잔가" : False
                 }
         return report
 
@@ -112,7 +113,7 @@ class nh_calculator():
                         "월리스료" : self.sheet.range('AG22').value ,
                         "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                         "기준금리" : round(self.sheet.range("AY38").value*100,2),
-                        "고잔가" : False
+                        # "고잔가" : False
                     }
             reports.append(report)
         return reports

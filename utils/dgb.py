@@ -28,7 +28,8 @@ class dgb_calculator():
         self.sheet.range('AS19').value = '대구광역시' #공채 지역 (고정값)
         self.sheet.range('BR21').value = False #기타비용 포함 여부 1.포함 2.별도 
         self.sheet.range('BD24').value = 0 #기타비용 
-
+        self.sheet.range('AS30').value = 0.3 # 보증금 비율
+    
     def fetch_calculator_parameters(self, input_data, single=False):
         self.sheet1.range('S9').value = input_data['affiliates_name'] #제휴사
         self.sheet1.range('S7').value = input_data['brand_name'] #브랜드명
@@ -71,7 +72,7 @@ class dgb_calculator():
                     "월리스료" : self.sheet.range('AA27').value ,
                     "최대잔가" : round(self.sheet.range('AS38').value*100,2),
                     "기준금리" : round(self.sheet.range("AS45").value*100,2),
-                    "고잔가" : False
+                    # "고잔가" : False
                 }
         return report
 
@@ -87,7 +88,7 @@ class dgb_calculator():
                         "월리스료" : self.sheet.range('AA27').value ,
                         "최대잔가" : round(self.sheet.range('AS38').value*100,2),
                         "기준금리" : round(self.sheet.range("AS45").value*100,2),
-                        "고잔가" : False
+                        # "고잔가" : False
                     }
             reports.append(report)
         return reports

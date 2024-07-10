@@ -32,7 +32,7 @@ class se_calculator():
         self.sheet.range('AD25').value = 0 #Total inc (고정값)
         self.sheet.range('AD32').value = 1 #자동차세 포함 여부 1.별도 2.포함
         self.sheet.range('AD34').value = 2 #인지대 수납 1.차감지급 2.리스료 포함 3.수납완료 
-
+        self.sheet.range('AD20').value = 0.3 # 보증금 비율
     def fetch_calculator_parameters(self, input_data, single = False):
         #API Input [브랜드명, 모델명, 상세등급, 차량가격, 옵션가격, 할인금액, 취득세 감면대상, 공채할인, 탁송료, 부대비용]
         self.sheet.range('AD6').value = input_data['affiliates_name'] #제휴사
@@ -75,13 +75,11 @@ class se_calculator():
             "월리스료" : self.sheet.range('H19').value ,
             "최대잔가" : round(self.sheet.range('AD21').value*100,2),
             "기준금리" : round(self.sheet.range("AD28").value*100,2),
-            "고잔가" : False
+            # "고잔가" : False
         }
         return report
 
     def create_iter_report(self):
-        # 반복 변수: 리스 기간, 잔존가치, 약정거리
-        # 고정 변수: 딜러사, 선납금, 보증금, 판매수수료, 보조금
         leasing_iter = [2, 3, 4] #36, 48, 60
         reports = []
 
@@ -94,7 +92,7 @@ class se_calculator():
                 "월리스료" : self.sheet.range('H19').value ,
                 "최대잔가" : round(self.sheet.range('AD21').value*100,2),
                 "기준금리" : round(self.sheet.range("AD28").value*100,2),
-                "고잔가" : False
+                # "고잔가" : False
             }
             reports.append(report)
         return reports

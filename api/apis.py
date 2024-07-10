@@ -302,7 +302,7 @@ def get_bnk_report_post():
             if wb is None:
                 return jsonify({'error': 'Failed to open workbook'}), 500
     
-            print('\n [Requested time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            print('\n [1 time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             bnk = bnk_calculator(xl_app, wb)
             report = bnk.main(input_data)
             print('\n [Completed time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))

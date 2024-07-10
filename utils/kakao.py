@@ -22,7 +22,7 @@ class kakaomsg():
             text=googleurl,
             link=link,
             button_title = button_title,
-            receiver_uuids=["THREdUZ1RHxNYVNgVGNUYVZhUn5Pfk5_SXBHIA"]
+            receiver_uuids=["TH1LekN7SXFAdlppW21YYVZkXWpGd0Z2R3FIfw0"]
         )
 
     def send_info(self, content_data):
@@ -42,5 +42,5 @@ class kakaomsg():
             message_type="feed",
             content=content, 
             item_content=item_content, 
-            receiver_uuids=["THREdUZ1RHxNYVNgVGNUYVZhUn5Pfk5_SXBHIA"]
+            receiver_uuids=["TH1LekN7SXFAdlppW21YYVZkXWpGd0Z2R3FIfw0"]
         )
