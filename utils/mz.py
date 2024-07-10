@@ -26,7 +26,8 @@ class mz_calculator():
         self.sheet.range('AF32').value = '미포함'  # 자동차세 포함 여부
         self.sheet.range('AG19').value = '대구' #공채 지역 (고정값)
         self.sheet.range('AF22').value = '미포함' #기타비용 포함 여부 1.포함 2.별도 
-    
+        self.sheet.range('AG27').value = 0.3 # 보증금 비율
+
     def fetch_calculator_parameters(self, input_data, single=False):
         self.sheet.range('AH6').value = input_data['affiliates_name'] #제휴사
         self.sheet.range('AG7').value = input_data['brand_name'] #브랜드명
@@ -64,7 +65,7 @@ class mz_calculator():
                     "월리스료" : self.sheet.range('T23').value ,
                     "최대잔가" : round(self.sheet.range('AG29').value*100,2),
                     "기준금리" : round(self.sheet.range("AG41").value*100,2),
-                    "고잔가" : False
+                    # "고잔가" : False
                 }
         return report
 
@@ -80,7 +81,7 @@ class mz_calculator():
                         "월리스료" : self.sheet.range('T23').value ,
                         "최대잔가" : round(self.sheet.range('AG29').value*100,2),
                         "기준금리" : round(self.sheet.range("AG41").value*100,2),
-                        "고잔가" : False
+                        # "고잔가" : False
                     }
             reports.append(report)
         return reports

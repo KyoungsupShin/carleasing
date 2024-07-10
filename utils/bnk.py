@@ -23,7 +23,7 @@ class bnk_calculator():
         self.sheet1.range('B98').value = True #취득세 수기 작성 여부 (고정값)
         self.sheet1.range('B194').value = False #기타비용 포함 여부 1.포함 2.별도  (고정값)
         self.sheet1.range('B141').value = 1 #취득원가 선택 (고정값)
-
+        self.sheet.range('N36').value = 0.3 # 보증금 비율
     def brand_idx(self, x):
         brands = self.wb.sheets['Es1'].range('J7', 'J36').value 
         for idx, b in enumerate(brands):
@@ -96,7 +96,7 @@ class bnk_calculator():
                     "월리스료" : self.sheet.range('H26').value ,
                     "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                     "기준금리" : round(self.sheet.range("N45").value*100,2),
-                    "고잔가" : False
+                    # "고잔가" : False
                 }
         return report
 
@@ -112,7 +112,7 @@ class bnk_calculator():
                         "월리스료" : self.sheet.range('H26').value ,
                         "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                         "기준금리" : round(self.sheet.range("N45").value*100,2),
-                        "고잔가" : False
+                        # "고잔가" : False
                     }
             reports.append(report)
         return reports

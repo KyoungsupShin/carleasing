@@ -18,8 +18,8 @@ class pdf_gen():
     def save_pdf(self):
         with xw.App() as app:
             app.visible = False
-            book = app.books.open('../data/견적서양식.xlsx')
-            sheet = book.sheets[0]
+            self.book = app.books.open('../data/견적서양식.xlsx')
+            sheet = self.book.sheets[0]
             sheet.page_setup.print_area = 'A1:AI39'
             print(self.input_data)
             sheet.range("J9").value = self.input_data['brand_name']
@@ -29,7 +29,7 @@ class pdf_gen():
             sheet.range("J14").value = self.input_data['option_price']
             sheet.range("J15").value = self.input_data['discount_price']
             sheet.range("J16").value = self.input_data['total_price']
-            sheet.range("J17").value = self.input_data['total_price'] #취득원가
+            sheet.range("J17").value = self.input_data['final_price'] #취득원가
 
             sheet.range("Y13").value = self.input_data['tax_price']
             sheet.range("Y14").value = self.input_data['bond_rate']
@@ -50,7 +50,9 @@ class pdf_gen():
                 sheet.range("J26").value = self.input_data['residual_rate'][0]
                 sheet.range("L26").value = self.input_data['residual_price'][0]
                 sheet.range("J28").value = self.input_data['monthly_lease'][0]
+                sheet.range("J30").value = self.input_data['sales_rate'][0]
                 sheet.range("J31").value = self.input_data['init_price'][0]
+
             if len(self.input_data['lease_month']) >= 2:
                 sheet.range("R20").value = self.input_data['lease_month'][1]
                 sheet.range("R21").value = self.input_data['distance'][1]
@@ -61,7 +63,9 @@ class pdf_gen():
                 sheet.range("R26").value = self.input_data['residual_rate'][1]
                 sheet.range("T26").value = self.input_data['residual_price'][1]
                 sheet.range("R28").value = self.input_data['monthly_lease'][1]
+                sheet.range("R30").value = self.input_data['sales_rate'][1]
                 sheet.range("R31").value = self.input_data['init_price'][1]
+
             if len(self.input_data['lease_month']) >= 3:
                 sheet.range("Z20").value = self.input_data['lease_month'][2] 
                 sheet.range("Z21").value = self.input_data['distance'][2]
@@ -72,6 +76,7 @@ class pdf_gen():
                 sheet.range("Z26").value = self.input_data['residual_rate'][2]
                 sheet.range("AB26").value = self.input_data['residual_price'][2]
                 sheet.range("Z28").value = self.input_data['monthly_lease'][2]
+                sheet.range("Z30").value = self.input_data['sales_rate'][2]
                 sheet.range("Z31").value = self.input_data['init_price'][2]
 
             sheet.range("X6").value = self.input_data['customer_name']
@@ -114,3 +119,6 @@ class pdf_gen():
         self.save_pdf()
         self.get_drive_service()
         self.upload_to_drive()
+
+    def __del__(self):
+        self.book.close()
