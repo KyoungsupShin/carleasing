@@ -24,6 +24,9 @@ class bnk_calculator():
         self.sheet1.range('B194').value = False #기타비용 포함 여부 1.포함 2.별도  (고정값)
         self.sheet1.range('B141').value = 1 #취득원가 선택 (고정값)
         self.sheet.range('N36').value = 0.3 # 보증금 비율
+        self.sheet.range('N38').value = 0 # 선수금 비율
+        self.sheet.range('N42').value = 0 # CM인센티브 비율
+
     def brand_idx(self, x):
         brands = self.wb.sheets['Es1'].range('J7', 'J36').value 
         for idx, b in enumerate(brands):
@@ -55,6 +58,7 @@ class bnk_calculator():
         return idx+1
     
     def fetch_calculator_parameters(self, input_data, single = False):
+        self.fetch_master_data()
         self.sheet1.range('B31').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('N16').value = input_data['delivery_price'] #탁송료-
         self.sheet1.range('B191').value = input_data['bond_yn'] #공채 포함 여부  1.포함 2.별도 
