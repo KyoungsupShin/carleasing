@@ -76,6 +76,7 @@ class se_calculator():
             "월리스료" : self.sheet.range('H19').value ,
             "최대잔가" : round(self.sheet.range('AD21').value*100,2),
             "기준금리" : round(self.sheet.range("AD28").value*100,2),
+            '초기비용' : self.sheet.range('L26').value
             # "고잔가" : False
         }
         return report
@@ -93,6 +94,7 @@ class se_calculator():
                 "월리스료" : self.sheet.range('H19').value ,
                 "최대잔가" : round(self.sheet.range('AD21').value*100,2),
                 "기준금리" : round(self.sheet.range("AD28").value*100,2),
+                '초기비용' : self.sheet.range('L26').value
                 # "고잔가" : False
             }
             reports.append(report)

@@ -100,7 +100,7 @@ class nh_calculator():
                     "월리스료" : self.sheet.range('AG22').value ,
                     "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                     "기준금리" : round(self.sheet.range("AY38").value*100,2),
-                    # "고잔가" : False
+                    "초기비용" : self.sheet.range("N21").value
                 }
         return report
 
@@ -116,7 +116,7 @@ class nh_calculator():
                         "월리스료" : self.sheet.range('AG22').value ,
                         "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
                         "기준금리" : round(self.sheet.range("AY38").value*100,2),
-                        # "고잔가" : False
+                        "초기비용" : self.sheet.range("N21").value
                     }
             reports.append(report)
         return reports

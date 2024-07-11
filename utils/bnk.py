@@ -16,6 +16,8 @@ class bnk_calculator():
         self.app.enable_events = False        
         self.sheet = self.wb.sheets['운용리스견적']  # 시트 이름을 적절히 수정하세요
         self.sheet1 = self.wb.sheets['Es1']
+
+    def fetch_master_data(self):
         self.sheet1.range('B39').value = 3 #리스기간 (반복 실행)
         self.sheet1.range('B41').value = 3 #운행거리 (반복 실행)
         self.sheet.range('N36').value = 0 #보증금 (세부 선택값)
@@ -100,7 +102,7 @@ class bnk_calculator():
                     "월리스료" : self.sheet.range('H26').value ,
                     "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                     "기준금리" : round(self.sheet.range("N45").value*100,2),
-                    # "고잔가" : False
+                    "초기비용" : self.sheet.range("F27")
                 }
         return report
 
@@ -116,7 +118,7 @@ class bnk_calculator():
                         "월리스료" : self.sheet.range('H26').value ,
                         "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                         "기준금리" : round(self.sheet.range("N45").value*100,2),
-                        # "고잔가" : False
+                        "초기비용" : self.sheet.range("F27")
                     }
             reports.append(report)
         return reports
