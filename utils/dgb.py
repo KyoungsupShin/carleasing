@@ -7,6 +7,7 @@ class dgb_calculator():
         self.app = xl_app
         self.wb = wb
         self.read_excel_file()
+        self.fetch_master_data()
     
     def read_excel_file(self):        
         # self.app = xw.App(visible=False)        
@@ -18,7 +19,8 @@ class dgb_calculator():
         self.sheet = self.wb.sheets['운용리스_단일']  # 시트 이름을 적절히 수정하세요
         self.sheet1 = self.wb.sheets['AG 입력시트']
         self.sheet2 = self.wb.sheets['계산_운용리스_단일']
-
+    
+    def fetch_master_data(self):
         self.sheet.range('BR18').value = True #취득세 수기 작성 여부 
         self.sheet.range('AS29').value = '차량가기준' #취득원가 선택 (고정값)
         self.sheet.range('AS28').value = 36 #리스기간 (반복 실행)
@@ -31,6 +33,7 @@ class dgb_calculator():
         self.sheet.range('AS30').value = 0.3 # 보증금 비율
     
     def fetch_calculator_parameters(self, input_data, single=False):
+        self.fetch_master_data()
         self.sheet1.range('S9').value = input_data['affiliates_name'] #제휴사
         self.sheet1.range('S7').value = input_data['brand_name'] #브랜드명
         self.sheet.range('AS7').value = input_data['car_name'] #차종

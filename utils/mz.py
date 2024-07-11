@@ -19,7 +19,7 @@ class mz_calculator():
         self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
         self.sheet.range('AG25').value = 36  #리스기간 (반복 실행)
         self.sheet.range('AG26').value = 20000  #운행거리 (반복 실행)
-        self.sheet.range('AG27').value = 0  #보증금 (세부 선택값)
+        # self.sheet.range('AG27').value = 0  #보증금 (세부 선택값)
         self.sheet.range('AG29').value = 0  #잔가 (세부 선택값)
         self.sheet.range('AF18').value = '수기' #취득세 수기 작성 여부 
         self.sheet.range('AH24').value = '차량가 기준' #취득원가 선택 (고정값)
@@ -27,6 +27,8 @@ class mz_calculator():
         self.sheet.range('AG19').value = '대구' #공채 지역 (고정값)
         self.sheet.range('AF22').value = '미포함' #기타비용 포함 여부 1.포함 2.별도 
         self.sheet.range('AG27').value = 0.3 # 보증금 비율
+        self.sheet.range('AG28').value = 0 # 선수금 비율
+        self.sheet.range('AG37').value = 0 # CM인센티브 비율
 
     def fetch_calculator_parameters(self, input_data, single=False):
         self.sheet.range('AH6').value = input_data['affiliates_name'] #제휴사

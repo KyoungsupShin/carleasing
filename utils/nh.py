@@ -50,14 +50,17 @@ class nh_calculator():
         self.capital_names = self.sheet.range('BN27', 'BP38').value
         self.options = self.sheet.range('CL3', 'CM15').value         
         self.sheet.range('BM10').value = 1 # 취득원가 선택 (고정값)
-        self.sheet.range('BG27').value = 1 # 리스기간 (반복 실행)
+        self.sheet.range('BG27').value = 2 # 리스기간 (반복 실행)
         self.sheet.range('BO11').value = 2 # 운행거리 (반복 실행)
         self.sheet.range('AY28').value = 0 # 잔가 (세부 선택값)
         self.sheet.range('BN10').value = 2 # 자동차세 포함 여부 1.포함 2. 미포함
         self.sheet.range('BH25').value = 1 # 공채 지역(인천)
         self.sheet.range('AY26').value = 0.3 # 보증금 비율
+        self.sheet.range('AY24').value = 0 # 선수금 비율
+        self.sheet.range('AY32').value = 0 # CM인센티브 비율
 
     def fetch_calculator_parameters(self, input_data, single=False):
+        self.fetch_master_data()
         self.sheet.range('BK10').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도 
         self.sheet.range('BA17').value = input_data['delivery_price'] #탁송료
         self.sheet.range('BJ10').value = input_data['bond_yn'] #공채선택 1.포함 2.미포함
@@ -102,10 +105,10 @@ class nh_calculator():
         return report
 
     def create_iter_report(self):
-        leasing_iter = [1, 2, 3] #36, 48, 60
+        leasing_iter = [2, 3, 4] #36, 48, 60
         reports = []
         for i in leasing_iter:
-            self.sheet.range('BG27').value = i+1 #리스기간
+            self.sheet.range('BG27').value = i #리스기간
             self.sheet.range('AY28').value = self.sheet.range('AZ30').value
             report = {
                         "_id": "2",
