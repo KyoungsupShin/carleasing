@@ -67,7 +67,7 @@ class mz_calculator():
                     "월리스료" : self.sheet.range('T23').value ,
                     "최대잔가" : round(self.sheet.range('AG29').value*100,2),
                     "기준금리" : round(self.sheet.range("AG41").value*100,2),
-                    # "고잔가" : False
+                    "초기비용" : self.sheet.range("G22").value
                 }
         return report
 
@@ -83,7 +83,7 @@ class mz_calculator():
                         "월리스료" : self.sheet.range('T23').value ,
                         "최대잔가" : round(self.sheet.range('AG29').value*100,2),
                         "기준금리" : round(self.sheet.range("AG41").value*100,2),
-                        # "고잔가" : False
+                        "초기비용" : self.sheet.range("G22").value
                     }
             reports.append(report)
         return reports

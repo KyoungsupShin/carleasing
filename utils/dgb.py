@@ -75,7 +75,7 @@ class dgb_calculator():
                     "월리스료" : self.sheet.range('AA27').value ,
                     "최대잔가" : round(self.sheet.range('AS38').value*100,2),
                     "기준금리" : round(self.sheet.range("AS45").value*100,2),
-                    # "고잔가" : False
+                    "초기비용" : self.sheet.range("K28").value
                 }
         return report
 
@@ -91,7 +91,7 @@ class dgb_calculator():
                         "월리스료" : self.sheet.range('AA27').value ,
                         "최대잔가" : round(self.sheet.range('AS38').value*100,2),
                         "기준금리" : round(self.sheet.range("AS45").value*100,2),
-                        # "고잔가" : False
+                        "초기비용" : self.sheet.range("K28").value
                     }
             reports.append(report)
         return reports
