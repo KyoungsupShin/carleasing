@@ -6,13 +6,9 @@ class mz_calculator():
         self.xlsx_name = '../data/mz.xlsx'
         self.app = xl_app
         self.wb = wb
-
-        # app = xw.App(visible=False)
         self.read_excel_file()
     
     def read_excel_file(self):        
-        # self.app = xw.App(visible=False)        
-        # self.wb = self.app.books.open(self.xlsx_name)
         self.app.calculation = 'manual'
         self.app.enable_events = False        
 
@@ -37,7 +33,7 @@ class mz_calculator():
         self.sheet.range('AG9').value = input_data['trim_name'] #세부 모델        
         self.sheet.range('AF21').value = input_data['delivery_yn']  #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('AG21').value = input_data['delivery_price']  #탁송료
-        self.sheet.range('AH20').value = input_data['bond_rate']  #공채할인율
+        self.sheet.range('AJ20').value = input_data['bond_rate']  #공채할인율
         self.sheet.range('AJ18').value = input_data['tax_price']  #취득세 
         self.sheet.range('AG22').value = input_data['etc_price']  #기타비용 
         self.sheet.range('AJ12').value = input_data['car_price']  # 차량 가격 
