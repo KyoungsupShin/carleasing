@@ -42,7 +42,7 @@ class se_calculator():
         self.sheet.range('AD15').value = int(input_data['delivery_yn']) #탁송료 부담 여부 1.별도 2.포함
         self.sheet.range('AE15').value = input_data['delivery_price'] #탁송료
         self.sheet.range('AD30').value = int(input_data['bond_yn']) #공채선택 1.부산승용 2.부산RV(제외) 3.별도부담
-        self.sheet.range('AD31').value = float(input_data['bond_rate']) #공채할인율
+        self.sheet.range('AG31').value = float(input_data['bond_rate']) #공채할인율
         self.sheet.range('AD33').value = int(input_data['etc_yn']) #기타비용 포함 여부 1.별도 2.포함
         self.sheet.range('AE33').value = int(input_data['etc_price']) #기타비용 
         self.sheet.range('AG10').value = input_data['hybrid_yn'] #하이브리드 세제혜택 여부

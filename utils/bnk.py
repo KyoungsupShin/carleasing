@@ -64,7 +64,7 @@ class bnk_calculator():
         self.sheet1.range('B31').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('N16').value = input_data['delivery_price'] #탁송료-
         self.sheet1.range('B191').value = input_data['bond_yn'] #공채 포함 여부  1.포함 2.별도 
-        self.sheet.range('N23').value = input_data['bond_rate'] #공채할인율  
+        self.sheet1.range('B119').value = input_data['bond_rate'] #공채할인율  
         self.sheet.range('N22').value = input_data['tax_price'] # 취득세 
         self.sheet.range('N24').value = input_data['etc_price'] #기타비용 
         self.sheet.range('N18').value = input_data['electric_subsidary'] #친환경 자동차 보조금 
@@ -102,7 +102,7 @@ class bnk_calculator():
                     "월리스료" : self.sheet.range('H26').value ,
                     "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                     "기준금리" : round(self.sheet.range("N45").value*100,2),
-                    "초기비용" : self.sheet.range("F27")
+                    "초기비용" : self.sheet.range("F27").value
                 }
         return report
 
@@ -118,7 +118,7 @@ class bnk_calculator():
                         "월리스료" : self.sheet.range('H26').value ,
                         "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                         "기준금리" : round(self.sheet.range("N45").value*100,2),
-                        "초기비용" : self.sheet.range("F27")
+                        "초기비용" : self.sheet.range("F27").value
                     }
             reports.append(report)
         return reports

@@ -40,7 +40,7 @@ class dgb_calculator():
         self.sheet.range('BR20').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('BD23').value = input_data['delivery_price'] #탁송료-
         self.sheet.range('BR19').value = input_data['bond_yn'] #공채선택 
-        self.sheet.range('BD21').value = input_data['bond_rate'] #공채할인율
+        self.sheet.range('AS22').value = input_data['bond_rate'] #공채할인율
         self.sheet.range('AI8').value = input_data['hybrid_yn'] #하이브리드 세제혜택 여부 1.미대상 2.하이브리드 3.전기차
         self.sheet2.range('I75').value = input_data['elec_yn'] #친환경 자동차 보조금 여부 
         self.sheet.range('AV20').value = input_data['electric_subsidary'] #친환경 자동차 보조금 
@@ -61,7 +61,10 @@ class dgb_calculator():
 
         if single == True:
             if input_data['max_res_yn'] == True:
-                self.sheet.range('AS36').value = self.sheet.range('AS38').value
+                limit_sum = 1 - (self.sheet.range('AS30').value + self.sheet.range('AS33').value)
+                limit_sum = limit_sum if limit_sum < 0.63 else 0.62  
+                self.sheet.range('AS36').value = limit_sum 
+                # self.sheet.range('AS36').value = self.sheet.range('AS38').value
             else:
                 if input_data['residual_rate'] < 0.3:
                     self.sheet.range('BR22').value = 0.3
@@ -84,7 +87,11 @@ class dgb_calculator():
         reports = []
         for i in leasing_iter:
             self.sheet.range('AS28').value = i #리스기간
-            self.sheet.range('AS36').value = self.sheet.range('AS38').value
+            limit_sum = 1 - (self.sheet.range('AS30').value + self.sheet.range('AS33').value)
+            limit_sum = limit_sum if limit_sum < 0.63 else 0.62  
+            self.sheet.range('AS36').value = limit_sum 
+
+            # self.sheet.range('AS36').value = self.sheet.range('AS38').value
             report = {
                         "_id": "5",
                         "금융사" : "DGB캐피탈" ,

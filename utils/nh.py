@@ -64,7 +64,7 @@ class nh_calculator():
         self.sheet.range('BK10').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도 
         self.sheet.range('BA17').value = input_data['delivery_price'] #탁송료
         self.sheet.range('BJ10').value = input_data['bond_yn'] #공채선택 1.포함 2.미포함
-        self.sheet.range('BB15').value = input_data['bond_rate'] #공채할인율
+        self.sheet.range('N12').value = input_data['bond_rate'] #공채할인율
         self.sheet.range('AY9').value = input_data['car_price'] #차량가격
         self.sheet.range('AY10').value = input_data['option_price'] #옵션 가격
         self.sheet.range('AY12').value = input_data['discount_price'] #할인 가격
