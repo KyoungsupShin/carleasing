@@ -16,6 +16,8 @@ class bnk_calculator():
         self.app.enable_events = False        
         self.sheet = self.wb.sheets['운용리스견적']  # 시트 이름을 적절히 수정하세요
         self.sheet1 = self.wb.sheets['Es1']
+
+    def fetch_master_data(self):
         self.sheet1.range('B39').value = 3 #리스기간 (반복 실행)
         self.sheet1.range('B41').value = 3 #운행거리 (반복 실행)
         self.sheet.range('N36').value = 0 #보증금 (세부 선택값)
@@ -23,6 +25,9 @@ class bnk_calculator():
         self.sheet1.range('B98').value = True #취득세 수기 작성 여부 (고정값)
         self.sheet1.range('B194').value = False #기타비용 포함 여부 1.포함 2.별도  (고정값)
         self.sheet1.range('B141').value = 1 #취득원가 선택 (고정값)
+        self.sheet.range('N36').value = 0.3 # 보증금 비율
+        self.sheet.range('N38').value = 0 # 선수금 비율
+        self.sheet.range('N42').value = 0 # CM인센티브 비율
 
     def brand_idx(self, x):
         brands = self.wb.sheets['Es1'].range('J7', 'J36').value 
@@ -55,10 +60,11 @@ class bnk_calculator():
         return idx+1
     
     def fetch_calculator_parameters(self, input_data, single = False):
+        self.fetch_master_data()
         self.sheet1.range('B31').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도
         self.sheet.range('N16').value = input_data['delivery_price'] #탁송료-
         self.sheet1.range('B191').value = input_data['bond_yn'] #공채 포함 여부  1.포함 2.별도 
-        self.sheet.range('N23').value = input_data['bond_rate'] #공채할인율  
+        self.sheet1.range('B119').value = input_data['bond_rate'] #공채할인율  
         self.sheet.range('N22').value = input_data['tax_price'] # 취득세 
         self.sheet.range('N24').value = input_data['etc_price'] #기타비용 
         self.sheet.range('N18').value = input_data['electric_subsidary'] #친환경 자동차 보조금 
@@ -96,7 +102,7 @@ class bnk_calculator():
                     "월리스료" : self.sheet.range('H26').value ,
                     "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                     "기준금리" : round(self.sheet.range("N45").value*100,2),
-                    "고잔가" : False
+                    "초기비용" : self.sheet.range("F27").value
                 }
         return report
 
@@ -112,20 +118,30 @@ class bnk_calculator():
                         "월리스료" : self.sheet.range('H26').value ,
                         "최대잔가" : round(self.sheet1.range('G120').value*100,2),
                         "기준금리" : round(self.sheet.range("N45").value*100,2),
-                        "고잔가" : False
+                        "초기비용" : self.sheet.range("F27").value
                     }
             reports.append(report)
         return reports
 
     def main(self, input_data):
-        self.fetch_calculator_parameters(input_data)
-        reports = self.create_iter_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data)
+            reports = self.create_iter_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     def main_single(self, input_data):
-        self.fetch_calculator_parameters(input_data, True)
-        reports = self.create_single_report()
-        return reports
+        try:
+            self.fetch_calculator_parameters(input_data, True)
+            reports = self.create_single_report()
+            return reports
+        except Exception as e:
+            print(e)
+            self.wb.save('../log/errorcheck.xlsm')
+            pass
 
     # def __del__(self):
     #     self.wb.close()

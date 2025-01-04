@@ -6,7 +6,8 @@ from nh import *
 from sh import * 
 from dgb import * 
 from mz import *
-from bnk import * 
+from bnk import *
+from pdfgenerator import *  
 from flask import Flask, jsonify, request, g
 import argparse 
 import xlwings as xw
@@ -53,12 +54,14 @@ def get_se_report_post():
             print('\n [Requested time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             se = se_calculator(xl_app, wb)
             report = se.main(input_data)
+            print(report)
             print('\n [Completed time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             return jsonify(report)
 
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del se 
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_se_single_report_post', methods=['POST'])
@@ -84,6 +87,7 @@ def get_se_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del se
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_nh_report_post', methods=['POST'])
@@ -108,6 +112,7 @@ def get_nh_report_post():
 
         except Exception as e:
             print(f"Error during Excel processing: {e}")
+            del nh
             xl_app = None
             return jsonify({'error': str(e)}), 500
 
@@ -134,6 +139,7 @@ def get_nh_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del nh
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_sh_report_post', methods=['POST'])
@@ -301,7 +307,7 @@ def get_bnk_report_post():
             if wb is None:
                 return jsonify({'error': 'Failed to open workbook'}), 500
     
-            print('\n [Requested time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            print('\n [1 time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             bnk = bnk_calculator(xl_app, wb)
             report = bnk.main(input_data)
             print('\n [Completed time]: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -309,6 +315,7 @@ def get_bnk_report_post():
 
         except Exception as e:
             print(f"Error during Excel processing: {e}")
+            wb.save('../log/bnk.xlsm')
             xl_app = None
             return jsonify({'error': str(e)}), 500
 
@@ -335,7 +342,6 @@ def get_bnk_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
-            bnk.wb.save('../log/bnk.xlsm')
             return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
