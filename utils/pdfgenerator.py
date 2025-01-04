@@ -20,7 +20,7 @@ class pdf_gen():
             app.visible = False
             self.book = app.books.open('../data/견적서양식.xlsx')
             sheet = self.book.sheets[0]
-            sheet.page_setup.print_area = 'A1:AI39'
+            sheet.page_setup.print_area = 'A1:AH54'
             print(self.input_data)
             sheet.range("J9").value = self.input_data['brand_name']
             sheet.range("J10").value = self.input_data['affiliates_name']
@@ -79,9 +79,10 @@ class pdf_gen():
                 sheet.range("Z30").value = self.input_data['sales_rate'][2]
                 sheet.range("Z31").value = self.input_data['init_price'][2]
 
-            sheet.range("X6").value = self.input_data['customer_name']
-            sheet.range("C35").value = self.input_data['salesname']
-            sheet.range("J36").value = self.input_data['salesnumber']
+            # sheet.range("X6").value = self.input_data['customer_name']
+            sheet.range("X6").value = 'VIP'
+            sheet.range("C52").value = self.input_data['salesname']
+            sheet.range("J53").value = self.input_data['salesnumber']
 
             # current_work_dir = os.getcwd()
             self.filename = "../data/pdf/{}.pdf".format(self.input_data['quoteid'])
@@ -120,5 +121,6 @@ class pdf_gen():
         self.get_drive_service()
         self.upload_to_drive()
 
-    def __del__(self):
-        self.book.close()
+    # def __del__(self):
+    #     self.book.close()
+        # self.book.kill()

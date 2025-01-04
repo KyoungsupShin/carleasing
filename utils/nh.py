@@ -3,13 +3,12 @@ import xlwings as xw
 
 class nh_calculator():
     def __init__(self, xl_app, wb):
-        # self.xlsx_name = '../data/nh.xlsx'
         self.app = xl_app
         self.wb = wb
-
         self.read_excel_file()
         self.fetch_master_data()
         
+
     def brand_idx(self, x):
         for car in self.brands:
             if car[1] == x:
@@ -39,8 +38,6 @@ class nh_calculator():
         return idx+1
         
     def read_excel_file(self):     
-        # self.app = xw.App(visible=False)        
-        # self.wb = self.app.books.open(self.xlsx_name)
         self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
         self.app.calculation = 'manual'
         self.app.enable_events = False        
@@ -55,12 +52,14 @@ class nh_calculator():
         self.sheet.range('AY28').value = 0 # 잔가 (세부 선택값)
         self.sheet.range('BN10').value = 2 # 자동차세 포함 여부 1.포함 2. 미포함
         self.sheet.range('BH25').value = 1 # 공채 지역(인천)
+    
+    def initialize_data(self):
         self.sheet.range('AY26').value = 0.3 # 보증금 비율
         self.sheet.range('AY24').value = 0 # 선수금 비율
         self.sheet.range('AY32').value = 0 # CM인센티브 비율
 
     def fetch_calculator_parameters(self, input_data, single=False):
-        self.fetch_master_data()
+        self.initialize_data()
         self.sheet.range('BK10').value = input_data['delivery_yn'] #탁송료 부담 여부 1.포함 2.별도 
         self.sheet.range('BA17').value = input_data['delivery_price'] #탁송료
         self.sheet.range('BJ10').value = input_data['bond_yn'] #공채선택 1.포함 2.미포함
@@ -71,7 +70,6 @@ class nh_calculator():
 
         if single == True:
             self.sheet.range('BG27').value = input_data['lease_month'] #리스기간 (반복 실행)
-            # self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
             self.sheet.range('BO11').value = input_data['distance'] #운행거리 (반복 실행)
             self.sheet.range('AY24').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('AY26').value = input_data['deposit_rate'] # 보증금 비율
@@ -86,19 +84,26 @@ class nh_calculator():
         
         if single == True:
             if input_data['max_res_yn'] == True:
-                self.sheet.range('AY28').value = self.sheet.range('AZ30').value #최대 잔가로 재 설정
+                limit_sum = 1 - (self.sheet.range('AY24').value + self.sheet.range('AY26').value)
+                limit_sum = limit_sum if limit_sum < self.sheet.range('AZ30').value + 0.01 else self.sheet.range('AZ30').value  
+                self.sheet.range('AY28').value = limit_sum 
             else:
                 if self.sheet.range('BB30').value == input_data['residual_rate']:
                     self.sheet.range('AY28').value = self.sheet.range('BB30').value
                 else: 
-                    self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                    if input_data['residual_rate'] <= self.sheet.range('AZ30').value: 
+                        self.sheet.range('AY28').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                    else:
+                        limit_sum = 1 - (self.sheet.range('AY24').value + self.sheet.range('AY26').value)
+                        limit_sum = limit_sum if limit_sum < self.sheet.range('AZ30').value + 0.01 else self.sheet.range('AZ30').value  
+                        self.sheet.range('AY28').value = limit_sum 
 
     def create_single_report(self):
         report = {
                     "_id": "2",
                     "금융사" : "NH농협캐피탈" ,
                     "월리스료" : self.sheet.range('AG22').value ,
-                    "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
+                    "최대잔가" : round(self.sheet.range('AY28').value*100,2),
                     "기준금리" : round(self.sheet.range("AY38").value*100,2),
                     "초기비용" : self.sheet.range("N21").value
                 }
@@ -109,18 +114,19 @@ class nh_calculator():
         reports = []
         for i in leasing_iter:
             self.sheet.range('BG27').value = i #리스기간
-            self.sheet.range('AY28').value = self.sheet.range('AZ30').value
+            limit_sum = 1 - (self.sheet.range('AY24').value + self.sheet.range('AY26').value)
+            limit_sum = limit_sum if limit_sum < self.sheet.range('AZ30').value + 0.01 else self.sheet.range('AZ30').value  
+            self.sheet.range('AY28').value = limit_sum 
             report = {
-                        "_id": "2",
-                        "금융사" : "NH농협캐피탈" ,
-                        "월리스료" : self.sheet.range('AG22').value ,
-                        "최대잔가" : round(self.sheet.range('AZ30').value*100,2),
-                        "기준금리" : round(self.sheet.range("AY38").value*100,2),
-                        "초기비용" : self.sheet.range("N21").value
-                    }
+            "_id": "2",
+            "금융사" : "NH농협캐피탈" ,
+            "월리스료" : self.sheet.range('AG22').value ,
+            "최대잔가" : round(self.sheet.range('AY28').value*100,2),
+            "기준금리" : round(self.sheet.range("AY38").value*100,2),
+            "초기비용" : self.sheet.range("N21").value
+            }
             reports.append(report)
         return reports
-    
     
     def main(self, input_data):
         try:

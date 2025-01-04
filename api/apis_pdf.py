@@ -25,17 +25,19 @@ def pdfgenerate():
     pg = pdf_gen(input_data)
     pg.main()
     share_url = pg.share_url
-    del pg
+    # del pg
     return jsonify({'share_url': share_url})
 
 @app.route('/api/request_consultant', methods=['POST'])
 def request_consultant():
     input_data = request.get_json()
     print(input_data)
-    km = kakaomsg()
-    km.send_pdf_url(input_data['pdfurl'])
-    km.send_info(input_data['contents'])
-    del km
+    # km = kakaomsg()
+    text = input_data['pdfurl'] + '\n' + input_data['contents'] + '\n'
+    asyncio.run(send_pdf_url(text))
+    
+    
+    # km.test_info()
     return jsonify({'status': 'ok'})
 
 

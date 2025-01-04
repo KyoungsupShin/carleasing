@@ -312,6 +312,7 @@ def get_bnk_report_post():
             print(f"Error during Excel processing: {e}")
             wb.save('../log/bnk.xlsm')
             xl_app = None
+            del bnk
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_bnk_single_report_post', methods=['POST'])
@@ -337,6 +338,7 @@ def get_bnk_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del bnk
             return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

@@ -3,16 +3,12 @@ import xlwings as xw
 
 class se_calculator():
     def __init__(self, xl_app, wb):
-        self.xlsx_name = '..\data\se.xlsx'
-        # app = xw.App(visible=False)
         self.app = xl_app
         self.wb = wb
         self.read_excel_file()
         self.fetch_master_data()
 
     def read_excel_file(self):   
-        # self.app = xw.App(visible=False)        
-        # self.wb = self.app.books.open(self.xlsx_name)
         self.app.calculation = 'manual'
         self.app.enable_events = False        
         self.sheet = self.wb.sheets['운용리스']  # 시트 이름을 적절히 수정하세요
@@ -30,15 +26,18 @@ class se_calculator():
         self.sheet.range('AD25').value = 0 #Total inc (고정값)
         self.sheet.range('AD32').value = 1 #자동차세 포함 여부 1.별도 2.포함
         self.sheet.range('AD34').value = 2 #인지대 수납 1.차감지급 2.리스료 포함 3.수납완료 
+        
+    def initialize_data(self):
         self.sheet.range('AD20').value = 0.3 # 보증금 비율
         self.sheet.range('AD22').value = 0 # 선수금 비율
         self.sheet.range('AD26').value = 0 # CM인센티브 비율
 
     def fetch_calculator_parameters(self, input_data, single = False):
-        self.fetch_master_data()
+        self.initialize_data()
         self.sheet.range('AD6').value = input_data['affiliates_name'] #제휴사
         self.sheet.range('AD9').value = int(input_data['brand_name']) #브랜드명
         self.sheet.range('AD10').value = int(input_data['car_name']) #차종
+        self.sheet.range('AD12').value = int(input_data['car_price']) #탁송료 부담 여부 1.별도 2.포함
         self.sheet.range('AD15').value = int(input_data['delivery_yn']) #탁송료 부담 여부 1.별도 2.포함
         self.sheet.range('AE15').value = input_data['delivery_price'] #탁송료
         self.sheet.range('AD30').value = int(input_data['bond_yn']) #공채선택 1.부산승용 2.부산RV(제외) 3.별도부담
@@ -55,20 +54,26 @@ class se_calculator():
             self.sheet.range('AD19').value = input_data['distance'] #운행거리 (반복 실행)
             self.sheet.range('AD22').value = input_data['prepayment_rate'] # 선수금 비율
             self.sheet.range('AD20').value = input_data['deposit_rate'] # 보증금 비율
-            self.sheet.range('AD26').value = input_data['sales_rate'] # CM인센티브 비율
+            self.sheet.range('AD25').value = input_data['sales_rate'] # CM인센티브 비율
         self.app.calculation = 'automatic'
         self.app.enable_events = True
 
         if single == True:
             if input_data['max_res_yn'] == True:
-                self.sheet.range('AD21').value = self.sheet.range('AH24').value #잔가 #최대 잔가로 재 설정
+                limit_sum = 1 - (self.sheet.range('AD20').value + self.sheet.range('AD22').value)
+                limit_sum = limit_sum if limit_sum < self.sheet.range('AH24').value + 0.01 else self.sheet.range('AH24').value  
+                self.sheet.range('AD21').value = limit_sum 
             else:
                 if self.sheet.range('AM29').value > input_data['residual_rate']:
                     self.sheet.range('AD21').value = self.sheet.range('AM29').value
                 else:
-                    self.sheet.range('AD21').value = input_data['residual_rate'] #잔가 (세부 선택값)
-
-        # self.wb.save('../log/se.xlsx')
+                    if input_data['residual_rate'] <= self.sheet.range('AH24').value: 
+                        self.sheet.range('AD21').value = input_data['residual_rate'] #잔가 (세부 선택값)
+                    else:
+                        limit_sum = 1 - (self.sheet.range('AD20').value + self.sheet.range('AD22').value)
+                        limit_sum = limit_sum if limit_sum < self.sheet.range('AH24').value + 0.01 else self.sheet.range('AH24').value  
+                        self.sheet.range('AD21').value = limit_sum 
+                    
     def create_single_report(self):
         report = {
             "_id": "1",
@@ -77,7 +82,6 @@ class se_calculator():
             "최대잔가" : round(self.sheet.range('AD21').value*100,2),
             "기준금리" : round(self.sheet.range("AD28").value*100,2),
             '초기비용' : self.sheet.range('L26').value
-            # "고잔가" : False
         }
         return report
 
@@ -87,7 +91,9 @@ class se_calculator():
 
         for i in leasing_iter:
             self.sheet.range('AD18').value = i #리스기간
-            self.sheet.range('AD21').value = self.sheet.range('AH24').value #잔가
+            limit_sum = 1 - (self.sheet.range('AD20').value + self.sheet.range('AD22').value)
+            limit_sum = limit_sum if limit_sum < self.sheet.range('AH24').value + 0.01 else self.sheet.range('AH24').value  
+            self.sheet.range('AD21').value = limit_sum 
             report = {
                 "_id": "1",
                 "금융사" : "KDB캐피탈" ,
@@ -95,11 +101,9 @@ class se_calculator():
                 "최대잔가" : round(self.sheet.range('AD21').value*100,2),
                 "기준금리" : round(self.sheet.range("AD28").value*100,2),
                 '초기비용' : self.sheet.range('L26').value
-                # "고잔가" : False
             }
             reports.append(report)
         return reports
-    
     
     def main(self, input_data):
         try:
@@ -110,7 +114,6 @@ class se_calculator():
             print(e)
             self.wb.save('../log/errorcheck.xlsm')
             pass
-
 
     def main_single(self, input_data):
         try:
