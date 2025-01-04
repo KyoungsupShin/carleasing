@@ -160,6 +160,7 @@ def get_sh_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del sh
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_sh_single_report_post', methods=['POST'])
@@ -185,6 +186,7 @@ def get_sh_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del sh
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_mz_report_post', methods=['POST'])
@@ -210,6 +212,7 @@ def get_mz_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del mz
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_mz_single_report_post', methods=['POST'])
@@ -235,6 +238,7 @@ def get_mz_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del mz
             return jsonify({'error': str(e)}), 500
 
 
@@ -261,6 +265,7 @@ def get_dgb_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del dgb
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_dgb_single_report_post', methods=['POST'])
@@ -286,6 +291,7 @@ def get_dgb_single_report_post():
         except Exception as e:
             print(f"Error during Excel processing: {e}")
             xl_app = None
+            del dgb
             return jsonify({'error': str(e)}), 500
 
 @app.route('/api/get_bnk_report_post', methods=['POST'])
