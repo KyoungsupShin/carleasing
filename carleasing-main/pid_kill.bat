@@ -1,0 +1,1 @@
+powershell -File ./utils/pid_kill.ps1
